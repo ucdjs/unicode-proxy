@@ -16,7 +16,7 @@
       "vars": {
         "ENVIRONMENT": "preview"
       },
-      "route": "unicode-proxy.preview.mojis.dev"
+      "route": "preview.unicode-proxy.mojis.dev"
     },
     "production": {
       "name": "unicode-proxy",
