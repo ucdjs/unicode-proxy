@@ -4,7 +4,6 @@ import { Hono } from "hono";
 import { showRoutes } from "hono/dev";
 import { HTTPException } from "hono/http-exception";
 import { proxy } from "hono/proxy";
-import { cache } from "./cache";
 
 const app = new Hono<HonoEnv>({
   strict: false,
