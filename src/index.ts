@@ -1,24 +1,27 @@
 import type { ApiError, HonoEnv } from "./types";
 import { parse } from "apache-autoindex-parse";
 import { Hono } from "hono";
+import { showRoutes } from "hono/dev";
 import { HTTPException } from "hono/http-exception";
 import { proxy } from "hono/proxy";
 import { cache } from "./cache";
 
-const app = new Hono<HonoEnv>();
+const app = new Hono<HonoEnv>({
+  strict: false,
+});
 
-app.get(
-  "*",
-  cache({
-    cacheName: "unicode-proxy",
-    cacheControl: "max-age=3600",
-  }),
-);
+// app.get(
+//   "*",
+//   cache({
+//     cacheName: "unicode-proxy",
+//     cacheControl: "max-age=3600",
+//   }),
+// );
 
-app.get("/", async (c) => {
-  const response = await fetch("https://unicode.org/Public?F=0");
+app.get("/proxy", async (c) => {
+  const response = await fetch("https://unicode.org/Public?F=2");
   const html = await response.text();
-  const files = parse(html, "F0");
+  const files = parse(html, "F2");
 
   if (!files) {
     throw new HTTPException(500, {
@@ -33,8 +36,9 @@ app.get("/", async (c) => {
   })));
 });
 
-app.get("/:path", async (c) => {
-  const res = await proxy(`https://unicode.org/Public/${c.req.param("path")}?F=0`);
+app.get("/proxy/:path{.*}", async (c) => {
+  const path = c.req.param("path");
+  const res = await proxy(`https://unicode.org/Public/${path}?F=2`);
 
   if (!res.ok) {
     return c.json({
@@ -46,9 +50,9 @@ app.get("/:path", async (c) => {
   }
 
   // if the response is a directory, parse the html and return the files
-  if (res.headers.get("content-type")?.includes("text/html")) {
+  if (res.headers.get("content-type")?.includes("text/html") && !path.endsWith("html")) {
     const html = await res.text();
-    const files = parse(html, "F0");
+    const files = parse(html, "F2");
 
     if (!files) {
       throw new HTTPException(500, {
@@ -65,6 +69,8 @@ app.get("/:path", async (c) => {
 
   return res;
 });
+
+showRoutes(app);
 
 app.onError(async (err, c) => {
   console.error(err);

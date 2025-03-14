@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       apache-autoindex-parse:
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.3.0
+        version: 0.3.0
       hono:
         specifier: ^4.7.4
         version: 4.7.4
@@ -1133,8 +1133,8 @@ packages:
     resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
     engines: {node: '>=8'}
 
-  apache-autoindex-parse@0.2.0:
-    resolution: {integrity: sha512-oimcwTkBLS8wH2KL5fIgOqYyQNXO/AzUN53cIDArgkARrse8nJWJZgWGZBNu0KPO0W3AAEs3q7NLMKj/51cD0Q==}
+  apache-autoindex-parse@0.3.0:
+    resolution: {integrity: sha512-uugj4wNTcTiSzHucHPdGaUuHOjU0lqMH4gP2QQmdGUXplxjo7O3J+0JMAiKayjenjIC6cK3DpY0ecjcgF+jr5g==}
 
   are-docs-informative@0.0.2:
     resolution: {integrity: sha512-ixiS0nLNNG5jNQzgZJNoUpBKdo9yTYZMGJ+QgT2jmjR7G7+QHRCc4v6LQ3NgE7EBJq+o0ams3waJwkrlBom8Ig==}
@@ -4151,7 +4151,7 @@ snapshots:
     dependencies:
       color-convert: 2.0.1
 
-  apache-autoindex-parse@0.2.0:
+  apache-autoindex-parse@0.3.0:
     dependencies:
       cheerio: 1.0.0
 

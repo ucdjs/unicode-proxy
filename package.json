@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "apache-autoindex-parse": "^0.2.0",
+    "apache-autoindex-parse": "^0.3.0",
     "hono": "^4.7.4"
   },
   "devDependencies": {
