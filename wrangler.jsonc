@@ -1,0 +1,29 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "unicode-proxy",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-03-13",
+	"observability": {
+		"logs": {
+			"enabled": true
+		},
+		"enabled": true
+	},
+	"placement": { "mode": "smart" },
+	"env": {
+		"preview": {
+			"name": "unicode-proxy-preview",
+			"vars": {
+				"ENVIRONMENT": "preview"
+			},
+			"route": "unicode-proxy.preview.mojis.dev"
+		},
+		"production": {
+			"name": "unicode-proxy",
+			"vars": {
+				"ENVIRONMENT": "production"
+			},
+			"route": "unicode-proxy.mojis.dev"
+		}
+	}
+}
