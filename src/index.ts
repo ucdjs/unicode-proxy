@@ -1,18 +1,24 @@
+import type { ApiError, HonoEnv } from "./types";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
+import { cache } from "./cache";
+import { RAW_ROUTER } from "./routes/raw";
 
-const app = new Hono<{ Bindings: CloudflareBindings }>();
+const app = new Hono<HonoEnv>();
+
+app.get(
+  "*",
+  cache({
+    cacheName: "my-app",
+    cacheControl: "max-age=3600",
+  }),
+);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");
 });
 
-interface ApiError {
-  path: string;
-  status: number;
-  message: string;
-  timestamp: string;
-}
+app.route("/raw", RAW_ROUTER);
 
 app.onError(async (err, c) => {
   console.error(err);
