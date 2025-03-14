@@ -19,7 +19,18 @@ app.get("/", async (c) => {
   const response = await fetch("https://unicode.org/Public?F=0");
   const html = await response.text();
   const files = parse(html, "F0");
-  return c.json(files);
+
+  if (!files) {
+    throw new HTTPException(500, {
+      message: "Failed to parse the directory listing",
+    });
+  }
+
+  return c.json(files.children.map((file) => ({
+    type: file.type,
+    name: file.name,
+    path: file.path.replace("/Public", ""),
+  })));
 });
 
 app.get("/:path", async (c) => {
@@ -38,7 +49,18 @@ app.get("/:path", async (c) => {
   if (res.headers.get("content-type")?.includes("text/html")) {
     const html = await res.text();
     const files = parse(html, "F0");
-    return c.json(files);
+
+    if (!files) {
+      throw new HTTPException(500, {
+        message: "Failed to parse the directory listing",
+      });
+    }
+
+    return c.json(files?.children.map((file) => ({
+      type: file.type,
+      name: file.name,
+      path: file.path.replace("/Public", ""),
+    })));
   }
 
   return res;
