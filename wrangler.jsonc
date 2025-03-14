@@ -13,17 +13,25 @@
   "env": {
     "preview": {
       "name": "unicode-proxy-preview",
+      "preview_urls": false,
       "vars": {
         "ENVIRONMENT": "preview"
       },
-      "route": "preview.unicode-proxy.mojis.dev"
+      "route": {
+        "custom_domain": true,
+        "pattern": "unicode-proxy.preview.mojis.dev"
+      }
     },
     "production": {
       "name": "unicode-proxy",
+      "preview_urls": false,
       "vars": {
         "ENVIRONMENT": "production"
       },
-      "route": "unicode-proxy.mojis.dev"
+      "route": {
+        "custom_domain": true,
+        "pattern": "unicode-proxy.mojis.dev"
+      }
     }
   }
 }
