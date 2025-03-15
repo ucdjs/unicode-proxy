@@ -6,6 +6,9 @@ A proxy that sits between you and your favourite mojis!
 
 Unicode Proxy is a lightweight intermediary between your requests and the [Unicode website](https://unicode.org). Depending on the endpoint you hit, you'll either receive a JSON-formatted directory listing or the raw content of a file.
 
+> [!NOTE]
+> By default, the proxy caches responses for 1 hour.
+
 ### Get a Directory Listing
 
 Fetch a JSON listing of files from a directory:

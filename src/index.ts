@@ -2,9 +2,9 @@ import type { ContentfulStatusCode } from "hono/utils/http-status";
 import type { ApiError, HonoEnv } from "./types";
 import { parse } from "apache-autoindex-parse";
 import { Hono } from "hono";
+import { cache } from "hono/cache";
 import { HTTPException } from "hono/http-exception";
 import { proxy } from "hono/proxy";
-import { cache } from "./cache";
 
 const app = new Hono<HonoEnv>({
   strict: false,
