@@ -10,13 +10,13 @@ const app = new Hono<HonoEnv>({
   strict: false,
 });
 
-// app.get(
-//   "*",
-//   cache({
-//     cacheName: "unicode-proxy",
-//     cacheControl: "max-age=3600",
-//   }),
-// );
+app.get(
+  "*",
+  cache({
+    cacheName: "unicode-proxy",
+    cacheControl: "max-age=3600",
+  }),
+);
 
 app.get("/proxy", async (c) => {
   const response = await fetch("https://unicode.org/Public?F=2");
