@@ -21,7 +21,6 @@
     "@cloudflare/vitest-pool-workers": "^0.8.0",
     "@cloudflare/workers-types": "^4.20250313.0",
     "@luxass/eslint-config": "^4.16.0",
-    "@stoplight/spectral-cli": "^6.14.3",
     "eslint": "^9.22.0",
     "eslint-plugin-format": "^1.0.1",
     "typescript": "^5.8.2",
