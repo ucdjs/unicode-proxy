@@ -10,13 +10,13 @@ const app = new Hono<HonoEnv>({
   strict: false,
 });
 
-app.get(
-  "*",
-  cache({
-    cacheName: "unicode-proxy",
-    cacheControl: "max-age=3600",
-  }),
-);
+// app.get(
+//   "*",
+//   cache({
+//     cacheName: "unicode-proxy",
+//     cacheControl: "max-age=3600",
+//   }),
+// );
 
 app.get("/proxy", async (c) => {
   const response = await fetch("https://unicode.org/Public?F=2");
@@ -60,7 +60,7 @@ app.get("/proxy/:path{.*}", async (c) => {
     return c.json(files?.children.map((file) => ({
       type: file.type,
       name: file.name,
-      path: file.path.replace("/Public", ""),
+      path: file.path.replace(`/Public/${path}`, ""),
     })));
   }
 
