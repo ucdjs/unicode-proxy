@@ -28,7 +28,11 @@ it("should return directory listing for root proxy path", async () => {
   await waitOnExecutionContext(ctx);
 
   expect(response.status).toBe(200);
-  const data = await response.json();
+  const data = await response.json() as Array<{
+    type: string;
+    name: string;
+    path: string;
+  }>;
   expect(Array.isArray(data)).toBe(true);
   expect(data[0]).toMatchObject({
     type: expect.any(String),
@@ -44,7 +48,11 @@ it("should return directory listing for nested directory", async () => {
   await waitOnExecutionContext(ctx);
 
   expect(response.status).toBe(200);
-  const data = await response.json();
+  const data = await response.json() as Array<{
+    type: string;
+    name: string;
+    path: string;
+  }>;
   expect(Array.isArray(data)).toBe(true);
   expect(data[0]).toMatchObject({
     type: expect.any(String),
