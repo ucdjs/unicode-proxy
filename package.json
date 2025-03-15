@@ -10,8 +10,8 @@
     "test": "pnpm vitest --run",
     "test:watch": "pnpm vitest",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "pnpm run cf-typegen && tsc --noEmit",
+    "lint": "eslint ."
   },
   "dependencies": {
     "apache-autoindex-parse": "^0.4.0",
@@ -19,7 +19,6 @@
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.8.0",
-    "@cloudflare/workers-types": "^4.20250313.0",
     "@luxass/eslint-config": "^4.16.0",
     "eslint": "^9.22.0",
     "eslint-plugin-format": "^1.0.1",
