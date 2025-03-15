@@ -1,21 +1,22 @@
+import type { ContentfulStatusCode } from "hono/utils/http-status";
 import type { ApiError, HonoEnv } from "./types";
 import { parse } from "apache-autoindex-parse";
 import { Hono } from "hono";
-import { showRoutes } from "hono/dev";
 import { HTTPException } from "hono/http-exception";
 import { proxy } from "hono/proxy";
+import { cache } from "./cache";
 
 const app = new Hono<HonoEnv>({
   strict: false,
 });
 
-// app.get(
-//   "*",
-//   cache({
-//     cacheName: "unicode-proxy",
-//     cacheControl: "max-age=3600",
-//   }),
-// );
+app.get(
+  "*",
+  cache({
+    cacheName: "unicode-proxy",
+    cacheControl: "max-age=3600",
+  }),
+);
 
 app.get("/proxy", async (c) => {
   const response = await fetch("https://unicode.org/Public?F=2");
@@ -40,12 +41,9 @@ app.get("/proxy/:path{.*}", async (c) => {
   const res = await proxy(`https://unicode.org/Public/${path}?F=2`);
 
   if (!res.ok) {
-    return c.json({
-      path: c.req.path,
-      status: res.status,
+    throw new HTTPException(res.status as ContentfulStatusCode, {
       message: res.statusText,
-      timestamp: new Date().toISOString(),
-    } satisfies ApiError);
+    });
   }
 
   // if the response is a directory, parse the html and return the files
@@ -68,8 +66,6 @@ app.get("/proxy/:path{.*}", async (c) => {
 
   return res;
 });
-
-showRoutes(app);
 
 app.onError(async (err, c) => {
   console.error(err);

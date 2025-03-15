@@ -62,17 +62,26 @@ export function cache(options: {
 
   const addHeader = (c: Context) => {
     if (cacheControlDirectives) {
-      const existingDirectives
-        = c.res.headers
-          .get("Cache-Control")
-          ?.split(",")
-          .map((d) => d.trim().split("=", 1)[0]) ?? [];
+      const existingDirectives = c.res.headers.get("Cache-Control")
+        ?.split(",")
+        .map((d) => d.trim().split("=", 1)[0]) ?? [];
+      let maxAge: number | undefined;
       for (const directive of cacheControlDirectives) {
         let [name, value] = directive.trim().split("=", 2);
         name = name.toLowerCase();
+        if (name === "max-age" && value) {
+          const parsed = Number.parseInt(value, 10);
+          if (!Number.isNaN(parsed)) {
+            maxAge = parsed;
+          }
+        }
         if (!existingDirectives.includes(name)) {
           c.header("Cache-Control", `${name}${value ? `=${value}` : ""}`, { append: true });
         }
+      }
+      if (maxAge !== undefined) {
+        const expires = new Date(Date.now() + maxAge * 1000).toUTCString();
+        c.header("X-Cache-Expires", expires);
       }
     }
 
