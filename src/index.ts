@@ -39,8 +39,8 @@ app.get("/proxy", async (c) => {
 
   return c.json(files.children.map((file) => ({
     type: file.type,
-    name: file.name,
-    path: file.path.replace("/Public", ""),
+    name: file.name.endsWith("/") ? file.name.slice(0, -1) : file.name,
+    path: file.path.replace("/Public/", ""),
   })));
 });
 
@@ -67,8 +67,8 @@ app.get("/proxy/:path{.*}", async (c) => {
 
     return c.json(files?.children.map((file) => ({
       type: file.type,
-      name: file.name,
-      path: file.path.replace(`/Public/${path}`, ""),
+      name: file.name.endsWith("/") ? file.name.slice(0, -1) : file.name,
+      path: file.path.replace(`/Public/${path}/`, ""),
     })));
   }
 
