@@ -37,11 +37,14 @@ app.get("/proxy", async (c) => {
     });
   }
 
-  return c.json(files.children.map((file) => ({
-    type: file.type,
-    name: file.name.endsWith("/") ? file.name.slice(0, -1) : file.name,
-    path: file.path.replace("/Public/", ""),
-  })));
+  return c.json(files.children.map((file) => {
+    const path = file.path.replace("/Public/", "");
+    return {
+      type: file.type,
+      name: file.name.endsWith("/") ? file.name.slice(0, -1) : file.name,
+      path: path.endsWith("/") ? path.slice(0, -1) : path,
+    };
+  }));
 });
 
 app.get("/proxy/:path{.*}", async (c) => {
@@ -65,11 +68,14 @@ app.get("/proxy/:path{.*}", async (c) => {
       });
     }
 
-    return c.json(files?.children.map((file) => ({
-      type: file.type,
-      name: file.name.endsWith("/") ? file.name.slice(0, -1) : file.name,
-      path: file.path.replace(`/Public/${path}/`, ""),
-    })));
+    return c.json(files?.children.map((file) => {
+      const filePath = file.path.replace(`/Public/${path}/`, "");
+      return {
+        type: file.type,
+        name: file.name.endsWith("/") ? file.name.slice(0, -1) : file.name,
+        path: filePath.endsWith("/") ? filePath.slice(0, -1) : filePath,
+      };
+    }));
   }
 
   return res;
