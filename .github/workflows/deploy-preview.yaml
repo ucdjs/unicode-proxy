@@ -79,10 +79,16 @@ jobs:
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           vars: API_VERSION
 
+      - name: clean deployment url
+        id: clean-url
+        run: |
+          echo "${{ steps.deploy.outputs.deployment-url }}" | sed 's/ (custom domain)//'
+          echo "deployment-url=$CLEAN_URL" >> "$GITHUB_OUTPUT"
+
       - name: verify deploy
-        if: ${{ github.event.inputs.dry-run != 'true' && steps.deploy.outputs.deployment-url != '' }}
+        if: ${{ github.event.inputs.dry-run != 'true' && steps.clean-url.outputs.deployment-url != '' }}
         run: |
           echo "using worker url: ${{ env.WORKER_URL }}"
           pnpm deploy:verify
         env:
-          WORKER_URL: ${{ steps.deploy.outputs.deployment-url }}
+          WORKER_URL: ${{ steps.clean-url.outputs.deployment-url }}
