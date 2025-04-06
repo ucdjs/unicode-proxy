@@ -68,6 +68,7 @@ jobs:
 
       - name: deploy
         if: ${{ github.event.inputs.dry-run != 'true' }}
+        id: deploy
         env:
           API_VERSION: ${{ steps.api-version.outputs.version }}
         uses: cloudflare/wrangler-action@392082e81ffbcb9ebdde27400634aa004b35ea37 # v3.14.0
@@ -77,3 +78,11 @@ jobs:
           environment: preview
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           vars: API_VERSION
+
+      - name: verify deploy
+        if: ${{ github.event.inputs.dry-run != 'true' && steps.deploy.outputs.deployment-url != '' }}
+        run: |
+          echo "using worker url: ${{ env.WORKER_URL }}"
+          pnpm deploy:verify
+        env:
+          WORKER_URL: ${{ steps.deploy.outputs.deployment-url }}
