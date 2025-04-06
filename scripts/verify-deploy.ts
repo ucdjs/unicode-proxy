@@ -1,10 +1,7 @@
 import { strict as assertStrict } from "node:assert";
 import process from "node:process";
 
-const WORKER_URL = process.env.WORKER_URL;
-if (!WORKER_URL) {
-  throw new Error("WORKER_URL environment variable is required");
-}
+let WORKER_URL = process.env.WORKER_URL;
 
 interface FileEntry {
   type: string;
@@ -20,7 +17,16 @@ interface ApiError {
 }
 
 async function verifyDeploy() {
+  if (WORKER_URL == null || WORKER_URL.trim() === "") {
+    throw new Error("WORKER_URL environment variable is required");
+  }
+
   console.log("🔍 Verifying deployment...");
+
+  // ensure that the worker url starts with https://
+  if (!WORKER_URL.startsWith("https://")) {
+    WORKER_URL = `https://${WORKER_URL}`;
+  }
 
   // Test 1: List files from /proxy endpoint
   console.log("\n📁 Testing /proxy endpoint...");
