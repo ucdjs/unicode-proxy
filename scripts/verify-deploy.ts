@@ -72,12 +72,12 @@ async function verifyDeploy() {
   // Test 5: Handle server errors
   console.log("\n⚠️ Testing error handling...");
   const errorRes = await fetch(`${WORKER_URL}/proxy/invalid-path/`);
-  assertStrict.equal(errorRes.status, 500, "Invalid path should return 500");
+  assertStrict.equal(errorRes.status, 404, "Invalid path should return 404");
 
   const error = await errorRes.json() as ApiError;
   assertStrict.ok(error.path, "Error should have a path");
-  assertStrict.equal(error.status, 500, "Error status should be 500");
-  assertStrict.equal(error.message, "Internal server error", "Error message should be \"Internal server error\"");
+  assertStrict.equal(error.status, 404, "Error status should be 404");
+  assertStrict.equal(error.message, "Not Found", "Error message should be \"Not Found\"");
   assertStrict.ok(error.timestamp, "Error should have a timestamp");
 
   console.log("\n✅ All tests passed!");
