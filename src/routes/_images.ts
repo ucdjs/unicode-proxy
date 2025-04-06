@@ -1,9 +1,12 @@
 import type { Hono } from "hono";
+import type { ContentfulStatusCode } from "hono/utils/http-status";
 import { cache } from "hono/cache";
 import { HTTPException } from "hono/http-exception";
 
 const cacheName = "unicode-proxy-images";
 const cacheControl = "max-age=604800";
+
+const ALLOWED_IMAGE_TYPES = ["image/png", "image/svg+xml", "image/gif", "image/jpeg", "image/webp"];
 
 export function setupImagesRoutes(app: Hono<{
   Bindings: CloudflareBindings;
@@ -25,8 +28,20 @@ export function setupImagesRoutes(app: Hono<{
 
       const response = await fetch(`https://unicode.org/${iconPath}`);
 
-      return c.newResponse(response.body, 200, {
-        "Content-Type": "image/png",
+      if (!response.ok) {
+        throw new HTTPException(404, {
+          message: "icon not found",
+        });
+      }
+
+      if (!ALLOWED_IMAGE_TYPES.includes(response.headers.get("content-type") ?? "")) {
+        throw new HTTPException(400, {
+          message: "invalid image type",
+        });
+      }
+
+      return c.newResponse(response.body, response.status as ContentfulStatusCode, {
+        "Content-Type": response.headers.get("content-type") ?? "image/png",
       });
     },
   );
