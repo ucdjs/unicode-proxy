@@ -43,7 +43,7 @@ describe("images", () => {
 
     expect(response.status).toBe(404);
     expect(await response.json()).toEqual({
-      message: "icon not found",
+      message: "failed to fetch image: Not Found",
       status: 404,
       path: "/_images?icon=not-a-real-icon",
       timestamp: expect.any(String),

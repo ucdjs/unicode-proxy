@@ -29,8 +29,8 @@ export function setupImagesRoutes(app: Hono<{
       const response = await fetch(`https://unicode.org/${iconPath}`);
 
       if (!response.ok) {
-        throw new HTTPException(404, {
-          message: "icon not found",
+        throw new HTTPException(response.status as ContentfulStatusCode, {
+          message: `failed to fetch image: ${response.statusText}`,
         });
       }
 
