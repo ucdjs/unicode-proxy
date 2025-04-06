@@ -26,7 +26,7 @@ app.get(
   }),
 );
 
-app.get("/proxy", async (c) => {
+app.get("/", async (c) => {
   const response = await fetch("https://unicode.org/Public?F=2");
   const html = await response.text();
   const files = parse(html, "F2");
@@ -47,7 +47,7 @@ app.get("/proxy", async (c) => {
   }));
 });
 
-app.get("/proxy/:path{.*}", async (c) => {
+app.get("/:path{.*}", async (c) => {
   const path = c.req.param("path");
   const res = await proxy(`https://unicode.org/Public/${path}?F=2`);
 
