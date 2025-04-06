@@ -48,7 +48,7 @@ async function verifyDeploy() {
   const notFoundError = await notFoundRes.json() as ApiError;
   assertStrict.ok(notFoundError.path, "Error should have a path");
   assertStrict.equal(notFoundError.status, 404, "Error status should be 404");
-  assertStrict.equal(notFoundError.message, "Not found", "Error message should be \"Not found\"");
+  assertStrict.equal(notFoundError.message, "Not Found", "Error message should be \"Not Found\"");
   assertStrict.ok(notFoundError.timestamp, "Error should have a timestamp");
 
   // Test 3: Proxy a specific file
