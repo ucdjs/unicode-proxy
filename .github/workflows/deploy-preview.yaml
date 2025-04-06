@@ -81,12 +81,13 @@ jobs:
 
       - name: clean deployment url
         id: clean-url
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
         run: |
-          echo "${{ steps.deploy.outputs.deployment-url }}" | sed 's/ (custom domain)//'
+          echo "$DEPLOYMENT_URL" | sed 's/ (custom domain)//'
           echo "deployment-url=$CLEAN_URL" >> "$GITHUB_OUTPUT"
 
       - name: verify deploy
-        if: ${{ github.event.inputs.dry-run != 'true' && steps.clean-url.outputs.deployment-url != '' }}
         run: |
           echo "using worker url: ${{ env.WORKER_URL }}"
           pnpm deploy:verify
