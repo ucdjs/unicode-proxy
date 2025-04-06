@@ -26,7 +26,7 @@ app.onError(async (err, c) => {
   const url = new URL(c.req.url);
   if (err instanceof HTTPException) {
     return c.json({
-      path: url.pathname,
+      path: url.pathname + url.search,
       status: err.status,
       message: err.message,
       timestamp: new Date().toISOString(),
@@ -44,7 +44,7 @@ app.onError(async (err, c) => {
 app.notFound(async (c) => {
   const url = new URL(c.req.url);
   return c.json({
-    path: url.pathname,
+    path: url.pathname + url.search,
     status: 404,
     message: "Not found",
     timestamp: new Date().toISOString(),
