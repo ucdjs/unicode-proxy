@@ -41,6 +41,19 @@ function transformHtml(response: Response, basePath = "") {
 const cacheName = "unicode-proxy-raw";
 const cacheControl = "max-age=3600";
 
+const ALLOWED_QUERY_PARAMS = ["C", "O", "F", "V", "P"];
+
+function setQueryParams(url: URL, query: Record<string, string>) {
+  // filter out query params that are not in the ALLOWED_QUERY_PARAMS array
+  const filteredQuery = Object.fromEntries(
+    Object.entries(query).filter(([key]) => ALLOWED_QUERY_PARAMS.includes(key)),
+  );
+
+  for (const [key, value] of Object.entries(filteredQuery)) {
+    url.searchParams.set(key, value);
+  }
+}
+
 export function setupRawRoutes(app: Hono<{
   Bindings: CloudflareBindings;
 }>) {
@@ -53,13 +66,8 @@ export function setupRawRoutes(app: Hono<{
     async (c) => {
       const query = c.req.query();
       const url = new URL("", "https://unicode.org/Public/");
-      if (query.F) {
-        url.searchParams.set("F", query.F);
-      }
 
-      if (query.C) {
-        url.searchParams.set("C", query.C);
-      }
+      setQueryParams(url, query);
 
       const urlString = decodeURIComponent(url.toString());
 
@@ -90,13 +98,7 @@ export function setupRawRoutes(app: Hono<{
       const query = c.req.query();
       const url = new URL(path, "https://unicode.org/Public/");
 
-      if (query.F) {
-        url.searchParams.set("F", query.F);
-      }
-
-      if (query.C) {
-        url.searchParams.set("C", query.C);
-      }
+      setQueryParams(url, query);
 
       const urlString = decodeURIComponent(url.toString());
 
