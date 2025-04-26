@@ -16,7 +16,7 @@ afterEach(() => fetchMock.assertNoPendingInterceptors());
 
 describe("images", () => {
   it("should return a 400 if no icon is provided", async () => {
-    const request = new Request("https://unicode-proxy.mojis.dev/_images");
+    const request = new Request("https://unicode-proxy.ucdjs.dev/_images");
     const ctx = createExecutionContext();
     const response = await worker.fetch(request, env, ctx);
     await waitOnExecutionContext(ctx);
@@ -36,7 +36,7 @@ describe("images", () => {
       .intercept({ path: "/not-a-real-icon" })
       .reply(404, "body");
 
-    const request = new Request("https://unicode-proxy.mojis.dev/_images?icon=not-a-real-icon");
+    const request = new Request("https://unicode-proxy.ucdjs.dev/_images?icon=not-a-real-icon");
     const ctx = createExecutionContext();
     const response = await worker.fetch(request, env, ctx);
     await waitOnExecutionContext(ctx);
@@ -60,7 +60,7 @@ describe("images", () => {
         },
       });
 
-    const request = new Request("https://unicode-proxy.mojis.dev/_images?icon=icon-with-disallowed-type");
+    const request = new Request("https://unicode-proxy.ucdjs.dev/_images?icon=icon-with-disallowed-type");
     const ctx = createExecutionContext();
     const response = await worker.fetch(request, env, ctx);
     await waitOnExecutionContext(ctx);
@@ -84,7 +84,7 @@ describe("images", () => {
         },
       });
 
-    const request = new Request("https://unicode-proxy.mojis.dev/_images?icon=icon-with-allowed-type");
+    const request = new Request("https://unicode-proxy.ucdjs.dev/_images?icon=icon-with-allowed-type");
     const ctx = createExecutionContext();
     const response = await worker.fetch(request, env, ctx);
     await waitOnExecutionContext(ctx);

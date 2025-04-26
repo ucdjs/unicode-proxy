@@ -2,7 +2,7 @@ import { defineWorkersProject } from "@cloudflare/vitest-pool-workers/config";
 
 export default defineWorkersProject({
   test: {
-    name: "unicode-proxy.mojis.dev",
+    name: "unicode-proxy",
     poolOptions: {
       workers: {
         singleWorker: true,

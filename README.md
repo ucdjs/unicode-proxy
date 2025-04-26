@@ -1,6 +1,6 @@
 # Unicode Proxy
 
-A proxy that sits between you and your favourite mojis!
+A proxy that sits between you and your Unicode data files.
 
 ## Usage
 

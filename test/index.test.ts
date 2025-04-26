@@ -7,7 +7,7 @@ import { expect, it } from "vitest";
 import worker from "../src";
 
 it("respond with a 404", async () => {
-  const request = new Request("https://unicode-proxy.mojis.dev/not-found");
+  const request = new Request("https://unicode-proxy.ucdjs.dev/not-found");
   const ctx = createExecutionContext();
   const response = await worker.fetch(request, env, ctx);
   await waitOnExecutionContext(ctx);
@@ -22,7 +22,7 @@ it("respond with a 404", async () => {
 });
 
 it("should return directory listing for root proxy path", async () => {
-  const request = new Request("https://unicode-proxy.mojis.dev/proxy");
+  const request = new Request("https://unicode-proxy.ucdjs.dev/proxy");
   const ctx = createExecutionContext();
   const response = await worker.fetch(request, env, ctx);
   await waitOnExecutionContext(ctx);
@@ -42,7 +42,7 @@ it("should return directory listing for root proxy path", async () => {
 });
 
 it("should return directory listing for nested directory", async () => {
-  const request = new Request("https://unicode-proxy.mojis.dev/proxy/emoji");
+  const request = new Request("https://unicode-proxy.ucdjs.dev/proxy/emoji");
   const ctx = createExecutionContext();
   const response = await worker.fetch(request, env, ctx);
   await waitOnExecutionContext(ctx);
@@ -62,7 +62,7 @@ it("should return directory listing for nested directory", async () => {
 });
 
 it("should return file contents for specific file", async () => {
-  const request = new Request("https://unicode-proxy.mojis.dev/proxy/emoji/16.0/emoji-test.txt");
+  const request = new Request("https://unicode-proxy.ucdjs.dev/proxy/emoji/16.0/emoji-test.txt");
   const ctx = createExecutionContext();
   const response = await worker.fetch(request, env, ctx);
   await waitOnExecutionContext(ctx);
@@ -74,7 +74,7 @@ it("should return file contents for specific file", async () => {
 });
 
 it("should handle 404 for non-existent paths", async () => {
-  const request = new Request("https://unicode-proxy.mojis.dev/proxy/not-a-real-path");
+  const request = new Request("https://unicode-proxy.ucdjs.dev/proxy/not-a-real-path");
   const ctx = createExecutionContext();
   const response = await worker.fetch(request, env, ctx);
   await waitOnExecutionContext(ctx);

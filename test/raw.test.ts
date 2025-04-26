@@ -25,7 +25,7 @@ describe("raw", () => {
         },
       });
 
-    const request = new Request("https://unicode-proxy.mojis.dev/raw");
+    const request = new Request("https://unicode-proxy.ucdjs.dev/raw");
     const ctx = createExecutionContext();
     const response = await worker.fetch(request, env, ctx);
     await waitOnExecutionContext(ctx);
@@ -46,7 +46,7 @@ describe("raw", () => {
         };
       });
 
-    const request = new Request("https://unicode-proxy.mojis.dev/raw?F=F1");
+    const request = new Request("https://unicode-proxy.ucdjs.dev/raw?F=F1");
     const ctx = createExecutionContext();
     const response = await worker.fetch(request, env, ctx);
     await waitOnExecutionContext(ctx);
@@ -67,7 +67,7 @@ describe("raw", () => {
         };
       });
 
-    const request = new Request("https://unicode-proxy.mojis.dev/raw?O=A");
+    const request = new Request("https://unicode-proxy.ucdjs.dev/raw?O=A");
     const ctx = createExecutionContext();
     const response = await worker.fetch(request, env, ctx);
     await waitOnExecutionContext(ctx);
@@ -88,7 +88,7 @@ describe("raw", () => {
         };
       });
 
-    const request = new Request("https://unicode-proxy.mojis.dev/raw?V=15.1");
+    const request = new Request("https://unicode-proxy.ucdjs.dev/raw?V=15.1");
     const ctx = createExecutionContext();
     const response = await worker.fetch(request, env, ctx);
     await waitOnExecutionContext(ctx);
@@ -103,7 +103,7 @@ describe("raw", () => {
       .intercept({ path: "/Public/emoji/15.1/emoji-test.txt" })
       .reply(200, "Hello, World!");
 
-    const request = new Request("https://unicode-proxy.mojis.dev/raw/emoji/15.1/emoji-test.txt");
+    const request = new Request("https://unicode-proxy.ucdjs.dev/raw/emoji/15.1/emoji-test.txt");
     const ctx = createExecutionContext();
     const response = await worker.fetch(request, env, ctx);
     await waitOnExecutionContext(ctx);
@@ -118,7 +118,7 @@ describe("raw", () => {
       .intercept({ path: "/Public/emoji/15.1/emoji-test.txt" })
       .reply(404, "Not Found");
 
-    const request = new Request("https://unicode-proxy.mojis.dev/raw/emoji/15.1/emoji-test.txt");
+    const request = new Request("https://unicode-proxy.ucdjs.dev/raw/emoji/15.1/emoji-test.txt");
     const ctx = createExecutionContext();
     const response = await worker.fetch(request, env, ctx);
     await waitOnExecutionContext(ctx);
