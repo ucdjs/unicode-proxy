@@ -19,7 +19,7 @@
       },
       "route": {
         "custom_domain": true,
-        "pattern": "unicode-proxy.preview.mojis.dev"
+        "pattern": "unicode-proxy.preview.ucdjs.dev"
       }
     },
     "production": {
@@ -30,7 +30,7 @@
       },
       "route": {
         "custom_domain": true,
-        "pattern": "unicode-proxy.mojis.dev"
+        "pattern": "unicode-proxy.ucdjs.dev"
       }
     }
   }
