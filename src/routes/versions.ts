@@ -9,7 +9,8 @@ const cacheControl = "max-age=3600";
 interface UnicodeVersion {
   version: string;
   documentationUrl: string;
-  year: string;
+  ucdUrl: string;
+  date: string;
 }
 
 export function setupVersionRoutes(app: Hono<{
@@ -55,13 +56,14 @@ export function setupVersionRoutes(app: Hono<{
         const version = versionMatch[2].replace("Unicode ", "");
 
         // look for a year pattern anywhere in the row
-        const yearMatch = row.match(/<td[^>]*>(\d{4})<\/td>/);
-        if (!yearMatch) continue;
+        const dateMatch = row.match(/<td[^>]*>(\d{4})<\/td>/);
+        if (!dateMatch) continue;
 
         versions.push({
           version,
           documentationUrl,
-          year: yearMatch[1],
+          date: dateMatch[1],
+          ucdUrl: `https://www.unicode.org/Public/${version}/ucd`,
         });
       }
 
@@ -71,8 +73,8 @@ export function setupVersionRoutes(app: Hono<{
         });
       }
 
-      // sort versions by year in descending order
-      versions.sort((a, b) => Number.parseInt(b.year) - Number.parseInt(a.year));
+      // sort versions by date in descending order
+      versions.sort((a, b) => Number.parseInt(b.date) - Number.parseInt(a.date));
 
       return c.json(versions);
     },
