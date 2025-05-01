@@ -52,7 +52,7 @@ export function setupVersionRoutes(app: Hono<{
         if (!versionMatch) continue;
 
         const documentationUrl = versionMatch[1];
-        const version = versionMatch[2];
+        const version = versionMatch[2].replace("Unicode ", "");
 
         // look for a year pattern anywhere in the row
         const yearMatch = row.match(/<td[^>]*>(\d{4})<\/td>/);
