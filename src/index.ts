@@ -3,6 +3,7 @@ import { HTTPException } from "hono/http-exception";
 import { setupImagesRoutes } from "./routes/_images";
 import { setupProxyRoutes } from "./routes/proxy";
 import { setupRawRoutes } from "./routes/raw";
+import { setupVersionRoutes } from "./routes/versions";
 
 export interface ApiError {
   path: string;
@@ -20,6 +21,7 @@ const app = new Hono<{
 setupImagesRoutes(app);
 setupProxyRoutes(app);
 setupRawRoutes(app);
+setupVersionRoutes(app);
 
 app.onError(async (err, c) => {
   console.error(err);
