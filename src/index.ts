@@ -19,7 +19,7 @@ const app = new Hono<{
 });
 
 const cacheName = "unicode-proxy";
-const cacheControl = "max-age=3600";
+const cacheControl = "max-age=604800"; // 1 week
 
 app.get(
   "/proxy",
