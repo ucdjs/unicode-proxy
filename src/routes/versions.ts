@@ -76,11 +76,13 @@ export function setupVersionRoutes(app: Hono<{
         if (!dateMatch) continue;
         const ucdVersion = MAPPINGS[version] || version;
 
+        const ucdUrl = `https://www.unicode.org/Public/${ucdVersion}/${version.includes("Update") ? "" : "ucd"}`;
+
         versions.push({
           version,
           documentationUrl,
           date: dateMatch[1],
-          ucdUrl: `https://www.unicode.org/Public/${ucdVersion}/ucd`,
+          ucdUrl,
         });
       }
 
