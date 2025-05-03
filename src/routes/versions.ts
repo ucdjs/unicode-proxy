@@ -76,7 +76,7 @@ export function setupVersionRoutes(app: Hono<{
         if (!dateMatch) continue;
         const ucdVersion = MAPPINGS[version] || version;
 
-        const ucdUrl = `https://www.unicode.org/Public/${ucdVersion}/${version.includes("Update") ? "" : "ucd"}`;
+        const ucdUrl = `https://www.unicode.org/Public/${ucdVersion}/${ucdVersion.includes("Update") ? "" : "ucd"}`;
 
         versions.push({
           version,
