@@ -9,9 +9,25 @@ const cacheControl = "max-age=3600";
 interface UnicodeVersion {
   version: string;
   documentationUrl: string;
-  ucdUrl: string;
+  ucdUrl?: string;
   date: string;
 }
+
+const MAPPINGS: Record<string, string> = {
+  "1.1.0": "1.1-Update",
+  "2.0.0": "2.0-Update",
+  "2.1.1": "2.1-Update",
+  "2.1.5": "2.1-Update2",
+  "2.1.8": "2.1-Update3",
+  "2.1.9": "2.1-Update4",
+  "3.0.0": "3.0-Update",
+  "3.0.1": "3.0-Update1",
+  "3.1.0": "3.1-Update",
+  "3.1.1": "3.1-Update1",
+  "3.2.0": "3.2-Update",
+  "4.0.0": "4.0-Update",
+  "4.0.1": "4.0-Update1",
+};
 
 export function setupVersionRoutes(app: Hono<{
   Bindings: CloudflareBindings;
@@ -58,12 +74,13 @@ export function setupVersionRoutes(app: Hono<{
         // look for a year pattern anywhere in the row
         const dateMatch = row.match(/<td[^>]*>(\d{4})<\/td>/);
         if (!dateMatch) continue;
+        const ucdVersion = MAPPINGS[version];
 
         versions.push({
           version,
           documentationUrl,
           date: dateMatch[1],
-          ucdUrl: `https://www.unicode.org/Public/${version}/ucd`,
+          ucdUrl: ucdVersion == null ? undefined : `https://www.unicode.org/Public/${ucdVersion}/ucd`,
         });
       }
 
