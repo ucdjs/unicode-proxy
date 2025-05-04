@@ -1,9 +1,9 @@
 import type { ContentfulStatusCode, StatusCode } from "hono/utils/http-status";
 import { parse } from "apache-autoindex-parse";
 import { Hono } from "hono";
-import { cache } from "hono/cache";
 import { HTTPException } from "hono/http-exception";
 import { proxy } from "hono/proxy";
+import { cache } from "./cache";
 
 export interface ApiError {
   path: string;
@@ -18,15 +18,13 @@ const app = new Hono<{
   strict: false,
 });
 
-const cacheName = "unicode-proxy";
-const cacheControl = "max-age=604800"; // 1 week
+app.get("*", cache({
+  cacheName: "unicode-proxy",
+  cacheControl: "max-age=604800, stale-while-revalidate=86400",
+}));
 
 app.get(
   "/",
-  cache({
-    cacheName,
-    cacheControl,
-  }),
   async (c) => {
     const response = await fetch("https://unicode.org/Public?F=2");
     const html = await response.text();
@@ -52,10 +50,6 @@ app.get(
 
 app.get(
   "/:path{.*}",
-  cache({
-    cacheName,
-    cacheControl,
-  }),
   async (c) => {
     const path = c.req.param("path");
     const res = await proxy(`https://unicode.org/Public/${path}?F=2`);
