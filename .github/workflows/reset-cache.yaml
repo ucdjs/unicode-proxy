@@ -28,3 +28,6 @@ jobs:
 
       - name: run reset cache script
         run: tsx ./scripts/reset-cache.ts
+        env:
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          CLOUDFLARE_RESET_CACHE_API_TOKEN: ${{ secrets.CLOUDFLARE_RESET_CACHE_API_TOKEN }}
