@@ -22,7 +22,7 @@ const cacheName = "unicode-proxy";
 const cacheControl = "max-age=604800"; // 1 week
 
 app.get(
-  "/proxy",
+  "/",
   cache({
     cacheName,
     cacheControl,
@@ -50,7 +50,7 @@ app.get(
 );
 
 app.get(
-  "/proxy/:path{.*}",
+  "/:path{.*}",
   cache({
     cacheName,
     cacheControl,
