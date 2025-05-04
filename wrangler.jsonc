@@ -19,7 +19,7 @@
       },
       "route": {
         "custom_domain": true,
-        "pattern": "unicode-proxy.preview.ucdjs.dev"
+        "pattern": "preview.unicode-proxy.ucdjs.dev"
       }
     },
     "production": {
