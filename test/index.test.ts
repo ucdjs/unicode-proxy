@@ -14,7 +14,7 @@ it("respond with a 404", async () => {
 
   expect(response.status).toBe(404);
   expect(await response.json()).toEqual({
-    message: "Not found",
+    message: "Not Found",
     status: 404,
     path: "/not-found",
     timestamp: expect.any(String),
@@ -22,7 +22,7 @@ it("respond with a 404", async () => {
 });
 
 it("should return directory listing for root proxy path", async () => {
-  const request = new Request("https://unicode-proxy.ucdjs.dev/proxy");
+  const request = new Request("https://unicode-proxy.ucdjs.dev");
   const ctx = createExecutionContext();
   const response = await worker.fetch(request, env, ctx);
   await waitOnExecutionContext(ctx);
@@ -42,7 +42,7 @@ it("should return directory listing for root proxy path", async () => {
 });
 
 it("should return directory listing for nested directory", async () => {
-  const request = new Request("https://unicode-proxy.ucdjs.dev/proxy/emoji");
+  const request = new Request("https://unicode-proxy.ucdjs.dev/emoji");
   const ctx = createExecutionContext();
   const response = await worker.fetch(request, env, ctx);
   await waitOnExecutionContext(ctx);
@@ -62,7 +62,7 @@ it("should return directory listing for nested directory", async () => {
 });
 
 it("should return file contents for specific file", async () => {
-  const request = new Request("https://unicode-proxy.ucdjs.dev/proxy/emoji/16.0/emoji-test.txt");
+  const request = new Request("https://unicode-proxy.ucdjs.dev/emoji/16.0/emoji-test.txt");
   const ctx = createExecutionContext();
   const response = await worker.fetch(request, env, ctx);
   await waitOnExecutionContext(ctx);
@@ -74,7 +74,7 @@ it("should return file contents for specific file", async () => {
 });
 
 it("should handle 404 for non-existent paths", async () => {
-  const request = new Request("https://unicode-proxy.ucdjs.dev/proxy/not-a-real-path");
+  const request = new Request("https://unicode-proxy.ucdjs.dev/not-a-real-path");
   const ctx = createExecutionContext();
   const response = await worker.fetch(request, env, ctx);
   await waitOnExecutionContext(ctx);
@@ -83,7 +83,7 @@ it("should handle 404 for non-existent paths", async () => {
   expect(await response.json()).toEqual({
     message: "Not Found",
     status: 404,
-    path: "/proxy/not-a-real-path",
+    path: "/not-a-real-path",
     timestamp: expect.any(String),
   });
 });

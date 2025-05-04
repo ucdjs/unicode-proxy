@@ -28,9 +28,9 @@ async function verifyDeploy() {
     WORKER_URL = `https://${WORKER_URL}`;
   }
 
-  // Test 1: List files from /proxy endpoint
-  console.log("\n📁 Testing /proxy endpoint...");
-  const proxyRes = await fetch(`${WORKER_URL}/proxy`);
+  // Test 1: List files from index endpoint
+  console.log("\n📁 Testing index endpoint...");
+  const proxyRes = await fetch(`${WORKER_URL}`);
   assertStrict.equal(proxyRes.status, 200, "Proxy endpoint should return 200");
 
   const proxyData = await proxyRes.json() as FileEntry[];
@@ -42,7 +42,7 @@ async function verifyDeploy() {
 
   // Test 2: Handle 404 for non-existent paths
   console.log("\n❌ Testing 404 handling...");
-  const notFoundRes = await fetch(`${WORKER_URL}/proxy/non-existent-path`);
+  const notFoundRes = await fetch(`${WORKER_URL}/non-existent-path`);
   assertStrict.equal(notFoundRes.status, 404, "Non-existent path should return 404");
 
   const notFoundError = await notFoundRes.json() as ApiError;
@@ -53,13 +53,13 @@ async function verifyDeploy() {
 
   // Test 3: Proxy a specific file
   console.log("\n📄 Testing file proxy...");
-  const fileRes = await fetch(`${WORKER_URL}/proxy/emoji/15.1/emoji-test.txt`);
+  const fileRes = await fetch(`${WORKER_URL}/emoji/15.1/emoji-test.txt`);
   assertStrict.equal(fileRes.status, 200, "File proxy should return 200");
   assertStrict.ok(fileRes.headers.get("content-type")?.includes("text/plain"), "Content type should be text/plain");
 
   // Test 4: List directory contents
   console.log("\n📂 Testing directory listing...");
-  const dirRes = await fetch(`${WORKER_URL}/proxy/emoji/15.1`);
+  const dirRes = await fetch(`${WORKER_URL}/emoji/15.1`);
   assertStrict.equal(dirRes.status, 200, "Directory listing should return 200");
 
   const dirData = await dirRes.json() as FileEntry[];
@@ -71,7 +71,7 @@ async function verifyDeploy() {
 
   // Test 5: Handle server errors
   console.log("\n⚠️ Testing error handling...");
-  const errorRes = await fetch(`${WORKER_URL}/proxy/invalid-path/`);
+  const errorRes = await fetch(`${WORKER_URL}/invalid-path/`);
   assertStrict.equal(errorRes.status, 404, "Invalid path should return 404");
 
   const error = await errorRes.json() as ApiError;
