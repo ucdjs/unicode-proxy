@@ -14,7 +14,7 @@ Unicode Proxy is a lightweight intermediary between your requests and the [Unico
 Fetch a JSON listing of files from a directory:
 
 ```bash
-curl https://unicode-proxy.ucdjs.dev/proxy
+curl https://unicode-proxy.ucdjs.dev
 ```
 
 ### Get a File
@@ -22,7 +22,7 @@ curl https://unicode-proxy.ucdjs.dev/proxy
 Retrieve the raw contents of a specific file:
 
 ```bash
-curl https://unicode-proxy.ucdjs.dev/proxy/path/to/file
+curl https://unicode-proxy.ucdjs.dev/path/to/file
 ```
 
 > [!NOTE]
