@@ -1,4 +1,4 @@
-import type { ContentfulStatusCode } from "hono/utils/http-status";
+import type { ContentfulStatusCode, StatusCode } from "hono/utils/http-status";
 import { parse } from "apache-autoindex-parse";
 import { Hono } from "hono";
 import { cache } from "hono/cache";
@@ -38,6 +38,7 @@ app.get(
       });
     }
 
+    c.header("Last-Modified", response.headers.get("Last-Modified") ?? "");
     return c.json(files.children.map((file) => {
       const path = file.path.replace("/Public/", "");
       return {
@@ -76,6 +77,7 @@ app.get(
         });
       }
 
+      c.header("Last-Modified", res.headers.get("Last-Modified") ?? "");
       return c.json(files?.children.map((file) => {
         const filePath = file.path.replace(`/Public/${path}/`, "");
         return {
@@ -86,7 +88,12 @@ app.get(
       }));
     }
 
-    return res;
+    return c.newResponse(res.body, res.status as StatusCode, {
+      "Last-Modified": res.headers.get("Last-Modified") ?? "",
+      "Content-Type": res.headers.get("Content-Type") ?? "",
+      "Content-Length": res.headers.get("Content-Length") ?? "",
+      "Content-Disposition": res.headers.get("Content-Disposition") ?? "",
+    });
   },
 );
 
