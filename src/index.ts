@@ -23,6 +23,10 @@ app.get("*", cache({
   cacheControl: "max-age=604800, stale-while-revalidate=86400",
 }));
 
+function trimTrailingSlash(path: string) {
+  return path.endsWith("/") ? path.slice(0, -1) : path;
+}
+
 app.get(
   "/",
   async (c) => {
@@ -37,12 +41,12 @@ app.get(
     }
 
     c.header("Last-Modified", response.headers.get("Last-Modified") ?? "");
-    return c.json(files.children.map((file) => {
-      const path = file.path.replace("/Public/", "");
+    return c.json(files.children.map(({ type, name, path, lastModified }) => {
       return {
-        type: file.type,
-        name: file.name.endsWith("/") ? file.name.slice(0, -1) : file.name,
-        path: path.endsWith("/") ? path.slice(0, -1) : path,
+        type,
+        name: trimTrailingSlash(name),
+        path: trimTrailingSlash(path),
+        lastModified,
       };
     }));
   },
@@ -72,12 +76,12 @@ app.get(
       }
 
       c.header("Last-Modified", res.headers.get("Last-Modified") ?? "");
-      return c.json(files?.children.map((file) => {
-        const filePath = file.path.replace(`/Public/${path}/`, "");
+      return c.json(files?.children.map(({ name, path, type, lastModified }) => {
         return {
-          type: file.type,
-          name: file.name.endsWith("/") ? file.name.slice(0, -1) : file.name,
-          path: filePath.endsWith("/") ? filePath.slice(0, -1) : filePath,
+          type,
+          name: trimTrailingSlash(name),
+          path: trimTrailingSlash(path),
+          lastModified,
         };
       }));
     }
