@@ -16,7 +16,7 @@
         "type": "ratelimit",
         "namespace_id": "1001",
         "simple": {
-          "limit": 100,
+          "limit": 2000,
           "period": 60
         }
       }
@@ -41,7 +41,7 @@
             "type": "ratelimit",
             "namespace_id": "1001",
             "simple": {
-              "limit": 100,
+              "limit": 2000,
               "period": 60
             }
           }
@@ -65,7 +65,7 @@
             "type": "ratelimit",
             "namespace_id": "1001",
             "simple": {
-              "limit": 100,
+              "limit": 2000,
               "period": 60
             }
           }
