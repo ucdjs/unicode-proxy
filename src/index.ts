@@ -18,11 +18,6 @@ const app = new Hono<{
   strict: false,
 });
 
-app.get("*", cache({
-  cacheName: "unicode-proxy",
-  cacheControl: "max-age=604800, stale-while-revalidate=86400",
-}));
-
 app.use("*", async (c, next) => {
   const key = c.req.header("cf-connecting-ip") ?? "";
   const { success } = await c.env.RATE_LIMITER.limit({ key });
@@ -35,6 +30,11 @@ app.use("*", async (c, next) => {
 
   await next();
 });
+
+app.get("*", cache({
+  cacheName: "unicode-proxy",
+  cacheControl: "max-age=604800, stale-while-revalidate=86400",
+}));
 
 function trimTrailingSlash(path: string) {
   return path.endsWith("/") ? path.slice(0, -1) : path;
