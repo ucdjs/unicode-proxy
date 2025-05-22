@@ -2,7 +2,7 @@
   "name": "unicode-proxy",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.6.3",
+  "packageManager": "pnpm@10.11.0",
   "scripts": {
     "dev": "wrangler dev",
     "build": "wrangler deploy --dry-run --outdir=dist",
@@ -15,18 +15,18 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "apache-autoindex-parse": "^0.4.0",
-    "hono": "^4.7.4"
+    "apache-autoindex-parse": "^0.5.0",
+    "hono": "^4.7.10"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.8.0",
-    "@luxass/eslint-config": "^4.16.0",
-    "eslint": "^9.22.0",
+    "@cloudflare/vitest-pool-workers": "^0.8.32",
+    "@luxass/eslint-config": "^4.18.1",
+    "eslint": "^9.27.0",
     "eslint-plugin-format": "^1.0.1",
-    "tsx": "^4.19.3",
-    "typescript": "^5.8.2",
-    "vitest": "^3.0.8",
-    "wrangler": "^4.0.0"
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4",
+    "wrangler": "^4.16.1"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
