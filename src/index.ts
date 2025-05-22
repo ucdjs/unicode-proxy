@@ -23,6 +23,19 @@ app.get("*", cache({
   cacheControl: "max-age=604800, stale-while-revalidate=86400",
 }));
 
+app.use("*", async (c, next) => {
+  const key = c.req.header("cf-connecting-ip") ?? "";
+  const { success } = await c.env.RATE_LIMITER.limit({ key });
+
+  if (!success) {
+    throw new HTTPException(429, {
+      message: "Too Many Requests - Please try again later",
+    });
+  }
+
+  await next();
+});
+
 function trimTrailingSlash(path: string) {
   return path.endsWith("/") ? path.slice(0, -1) : path;
 }
