@@ -18,6 +18,19 @@ const app = new Hono<{
   strict: false,
 });
 
+app.use("*", async (c, next) => {
+  const key = c.req.header("cf-connecting-ip") ?? "";
+  const { success } = await c.env.RATE_LIMITER.limit({ key });
+
+  if (!success) {
+    throw new HTTPException(429, {
+      message: "Too Many Requests - Please try again later",
+    });
+  }
+
+  await next();
+});
+
 app.get("*", cache({
   cacheName: "unicode-proxy",
   cacheControl: "max-age=604800, stale-while-revalidate=86400",
