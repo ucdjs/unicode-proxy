@@ -35,25 +35,19 @@ app.use("*", async (c, next) => {
   await next();
 });
 
+app.get("/favicon.ico", (c) => {
+  return c.newResponse(null, 204, {});
+});
+
 app.get("*", cache({
   cacheName: "unicode-proxy",
   cacheControl: "max-age=604800, stale-while-revalidate=86400",
 }));
 
 app.get(
-  "/",
+  "/:path{.*}?",
   async (c) => {
-    const { files, lastModified } = await parseUnicodeDirectory();
-
-    c.header("Last-Modified", lastModified);
-    return c.json(files);
-  },
-);
-
-app.get(
-  "/:path{.*}",
-  async (c) => {
-    const path = c.req.param("path");
+    const path = c.req.param("path") || "";
     const res = await proxy(`https://unicode.org/Public/${path}?F=2`);
 
     if (!res.ok) {
@@ -64,9 +58,9 @@ app.get(
 
     // if the response is a directory, parse the html and return the files
     if (res.headers.get("content-type")?.includes("text/html") && !path.endsWith("html")) {
-      const { files, lastModified } = await parseUnicodeDirectory(path);
+      const { files } = await parseUnicodeDirectory(await res.text());
 
-      c.header("Last-Modified", lastModified);
+      c.header("Last-Modified", res.headers.get("Last-Modified") ?? "");
       return c.json(files);
     }
 
@@ -111,7 +105,17 @@ app.notFound(async (c) => {
 
 export default class UnicodeProxy extends WorkerEntrypoint<CloudflareBindings> {
   async getUnicodeDirectory(path: string = ""): ReturnType<typeof parseUnicodeDirectory> {
-    return parseUnicodeDirectory(path);
+    const url = path ? `https://unicode.org/Public/${path}?F=2` : "https://unicode.org/Public?F=2";
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch directory: ${response.status} ${response.statusText}`);
+    }
+
+    const html = await response.text();
+
+    return parseUnicodeDirectory(html);
   }
 
   async fetch(request: Request) {
