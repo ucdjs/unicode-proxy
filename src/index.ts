@@ -1,10 +1,10 @@
 import type { ContentfulStatusCode, StatusCode } from "hono/utils/http-status";
-import { parse } from "apache-autoindex-parse";
 import { WorkerEntrypoint } from "cloudflare:workers";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { proxy } from "hono/proxy";
 import { cache } from "./cache";
+import { parseUnicodeDirectory } from "./lib";
 
 export interface ApiError {
   path: string;
@@ -37,32 +37,13 @@ app.get("*", cache({
   cacheControl: "max-age=604800, stale-while-revalidate=86400",
 }));
 
-function trimTrailingSlash(path: string) {
-  return path.endsWith("/") ? path.slice(0, -1) : path;
-}
-
 app.get(
   "/",
   async (c) => {
-    const response = await fetch("https://unicode.org/Public?F=2");
-    const html = await response.text();
-    const files = parse(html, "F2");
+    const { files, lastModified } = await parseUnicodeDirectory();
 
-    if (!files) {
-      throw new HTTPException(500, {
-        message: "Failed to parse the directory listing",
-      });
-    }
-
-    c.header("Last-Modified", response.headers.get("Last-Modified") ?? "");
-    return c.json(files.children.map(({ type, name, path, lastModified }) => {
-      return {
-        type,
-        name: trimTrailingSlash(name),
-        path: trimTrailingSlash(path),
-        lastModified,
-      };
-    }));
+    c.header("Last-Modified", lastModified);
+    return c.json(files);
   },
 );
 
@@ -80,24 +61,10 @@ app.get(
 
     // if the response is a directory, parse the html and return the files
     if (res.headers.get("content-type")?.includes("text/html") && !path.endsWith("html")) {
-      const html = await res.text();
-      const files = parse(html, "F2");
+      const { files, lastModified } = await parseUnicodeDirectory(path);
 
-      if (!files) {
-        throw new HTTPException(500, {
-          message: "Failed to parse the directory listing",
-        });
-      }
-
-      c.header("Last-Modified", res.headers.get("Last-Modified") ?? "");
-      return c.json(files?.children.map(({ name, path, type, lastModified }) => {
-        return {
-          type,
-          name: trimTrailingSlash(name),
-          path: trimTrailingSlash(path),
-          lastModified,
-        };
-      }));
+      c.header("Last-Modified", lastModified);
+      return c.json(files);
     }
 
     return c.newResponse(res.body, res.status as StatusCode, {
@@ -140,6 +107,10 @@ app.notFound(async (c) => {
 });
 
 export default class UnicodeProxy extends WorkerEntrypoint<CloudflareBindings> {
+  async getUnicodeDirectory(path: string = ""): ReturnType<typeof parseUnicodeDirectory> {
+    return parseUnicodeDirectory(path);
+  }
+
   async fetch(request: Request) {
     return app.fetch(request, this.env, this.ctx);
   }
