@@ -4,12 +4,12 @@ import {
   waitOnExecutionContext,
 } from "cloudflare:test";
 import { expect, it } from "vitest";
-import worker from "../src";
+import Worker from "../src";
 
 it("respond with a 404", async () => {
   const request = new Request("https://unicode-proxy.ucdjs.dev/not-found");
   const ctx = createExecutionContext();
-  const response = await worker.fetch(request, env, ctx);
+  const response = await new Worker(ctx, env as CloudflareBindings).fetch(request);
   await waitOnExecutionContext(ctx);
 
   expect(response.status).toBe(404);
@@ -24,7 +24,7 @@ it("respond with a 404", async () => {
 it("should return directory listing for root proxy path", async () => {
   const request = new Request("https://unicode-proxy.ucdjs.dev");
   const ctx = createExecutionContext();
-  const response = await worker.fetch(request, env, ctx);
+  const response = await new Worker(ctx, env as CloudflareBindings).fetch(request);
   await waitOnExecutionContext(ctx);
 
   expect(response.status).toBe(200);
@@ -44,7 +44,7 @@ it("should return directory listing for root proxy path", async () => {
 it("should return directory listing for nested directory", async () => {
   const request = new Request("https://unicode-proxy.ucdjs.dev/emoji");
   const ctx = createExecutionContext();
-  const response = await worker.fetch(request, env, ctx);
+  const response = await new Worker(ctx, env as CloudflareBindings).fetch(request);
   await waitOnExecutionContext(ctx);
 
   expect(response.status).toBe(200);
@@ -64,7 +64,7 @@ it("should return directory listing for nested directory", async () => {
 it("should return file contents for specific file", async () => {
   const request = new Request("https://unicode-proxy.ucdjs.dev/emoji/16.0/emoji-test.txt");
   const ctx = createExecutionContext();
-  const response = await worker.fetch(request, env, ctx);
+  const response = await new Worker(ctx, env as CloudflareBindings).fetch(request);
   await waitOnExecutionContext(ctx);
 
   expect(response.status).toBe(200);
@@ -76,7 +76,7 @@ it("should return file contents for specific file", async () => {
 it("should handle 404 for non-existent paths", async () => {
   const request = new Request("https://unicode-proxy.ucdjs.dev/not-a-real-path");
   const ctx = createExecutionContext();
-  const response = await worker.fetch(request, env, ctx);
+  const response = await new Worker(ctx, env as CloudflareBindings).fetch(request);
   await waitOnExecutionContext(ctx);
 
   expect(response.status).toBe(404);

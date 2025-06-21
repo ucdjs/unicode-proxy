@@ -1,5 +1,6 @@
 import type { ContentfulStatusCode, StatusCode } from "hono/utils/http-status";
 import { parse } from "apache-autoindex-parse";
+import { WorkerEntrypoint } from "cloudflare:workers";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { proxy } from "hono/proxy";
@@ -138,4 +139,8 @@ app.notFound(async (c) => {
   } satisfies ApiError, 404);
 });
 
-export default app;
+export default class UnicodeProxy extends WorkerEntrypoint<CloudflareBindings> {
+  async fetch(request: Request) {
+    return app.fetch(request, this.env, this.ctx);
+  }
+}
