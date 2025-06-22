@@ -1,9 +1,9 @@
 import type { ContentfulStatusCode, StatusCode } from "hono/utils/http-status";
 import { WorkerEntrypoint } from "cloudflare:workers";
 import { Hono } from "hono";
+import { cache } from "hono/cache";
 import { HTTPException } from "hono/http-exception";
 import { proxy } from "hono/proxy";
-import { cache } from "./cache";
 import { parseUnicodeDirectory } from "./lib";
 
 export interface ApiError {
