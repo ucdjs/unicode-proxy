@@ -39,12 +39,10 @@ app.get("/favicon.ico", (c) => {
   return c.newResponse(null, 204, {});
 });
 
-app.get("*", cache({
-  cacheName: "unicode-proxy",
-  cacheControl: "max-age=604800, stale-while-revalidate=86400",
-}));
-
-app.get("/.ucd-store.json", async (c) => {
+app.get("/.ucd-store.json", cache({
+  cacheName: "unicode-proxy-store",
+  cacheControl: "max-age=3600",
+}), async (c) => {
   const res = await fetch(`https://unicode.org/Public/?F=2`);
   if (!res.ok) {
     throw new HTTPException(res.status as ContentfulStatusCode, {
@@ -66,6 +64,10 @@ app.get("/.ucd-store.json", async (c) => {
 
 app.get(
   "/:path{.*}?",
+  cache({
+    cacheName: "unicode-proxy",
+    cacheControl: "max-age=604800, stale-while-revalidate=86400",
+  }),
   async (c) => {
     const path = c.req.param("path") || "";
     const res = await proxy(`https://unicode.org/Public/${path}?F=2`);
