@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > This repository has been archived since we have moved to be inside the [ucdjs/ucd](https://github.com/ucdjs/ucd) repository.
 >
-> This is done to iterate faster, so for tracking the newest progress, take a look at [ucdjs/ucd#proxy](<[https://github.com/ucdjs/ucd](https://github.com/ucdjs/ucd/tree/main/apps/proxy)>)
+> This is done to iterate faster, so for tracking the newest progress, take a look at [ucdjs/ucd#proxy](https://github.com/ucdjs/ucd/tree/main/apps/proxy)
 
 A proxy that sits between you and your Unicode data files.
 
