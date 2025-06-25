@@ -57,7 +57,10 @@ app.get("/.ucd-store.json", cache({
   const versions = files.filter((file) => {
     const match = file.name.match(/^(\d+)\.(\d+)\.(\d+)$/);
     return match && match.length === 4;
-  });
+  }).map(({ name, path }) => ({
+    version: name,
+    path,
+  }));
 
   return c.json(versions);
 });
