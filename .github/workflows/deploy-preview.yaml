@@ -85,7 +85,7 @@ jobs:
           DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
         run: |
           CLEANED_URL=$(echo "$DEPLOYMENT_URL" | sed 's/ (custom domain)//')
-          echo "deployment-url=$CLEANED_URL" >> "$GITHUB_OUTPUT"
+          echo "deployment-url=https://$CLEANED_URL" >> "$GITHUB_OUTPUT"
 
       - name: verify deploy
         if: ${{ github.event.inputs.dry-run != 'true' && steps.clean-url.outputs.deployment-url != '' }}
@@ -94,3 +94,34 @@ jobs:
           pnpm deploy:verify
         env:
           WORKER_URL: ${{ steps.clean-url.outputs.deployment-url }}
+
+      - name: find existing comment
+        id: find-comment
+        uses: peter-evans/find-comment@3eae4d37986fb5a8592848f6a574fdf654e61f9e #v3.1.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: "<!-- worker-preview -->"
+
+      - name: create or update PR comment
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 #v4.0.0
+        env:
+          WORKER_URL: ${{ steps.clean-url.outputs.deployment-url }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            <!-- worker-preview -->
+            ## Preview of API Worker
+
+            The API Worker has been deployed successfully.
+
+            **Preview URL:** ${{ env.WORKER_URL }}
+
+
+            This preview was built from commit ${{ env.HEAD_SHA }}
+
+            ---
+            <sub>🤖 This comment will be updated automatically when you push new commits to this PR.</sub>
+          edit-mode: replace
