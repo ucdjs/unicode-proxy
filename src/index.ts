@@ -39,13 +39,38 @@ app.get("/favicon.ico", (c) => {
   return c.newResponse(null, 204, {});
 });
 
-app.get("*", cache({
-  cacheName: "unicode-proxy",
-  cacheControl: "max-age=604800, stale-while-revalidate=86400",
-}));
+app.get("/.ucd-store.json", cache({
+  cacheName: "unicode-proxy-store",
+  cacheControl: "max-age=3600",
+}), async (c) => {
+  const res = await fetch(`https://unicode.org/Public/?F=2`);
+  if (!res.ok) {
+    throw new HTTPException(res.status as ContentfulStatusCode, {
+      message: res.statusText,
+    });
+  }
+
+  const text = await res.text();
+  const { files } = await parseUnicodeDirectory(text);
+
+  // filter out the files that isn't a valid semver
+  const versions = files.filter((file) => {
+    const match = file.name.match(/^(\d+)\.(\d+)\.(\d+)$/);
+    return match && match.length === 4;
+  }).map(({ name, path }) => ({
+    version: name,
+    path,
+  }));
+
+  return c.json(versions);
+});
 
 app.get(
   "/:path{.*}?",
+  cache({
+    cacheName: "unicode-proxy",
+    cacheControl: "max-age=604800, stale-while-revalidate=86400",
+  }),
   async (c) => {
     const path = c.req.param("path") || "";
     const res = await proxy(`https://unicode.org/Public/${path}?F=2`);
