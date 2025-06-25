@@ -44,6 +44,26 @@ app.get("*", cache({
   cacheControl: "max-age=604800, stale-while-revalidate=86400",
 }));
 
+app.get("/.ucd-store.json", async (c) => {
+  const res = await fetch(`https://unicode.org/Public/?F=2`);
+  if (!res.ok) {
+    throw new HTTPException(res.status as ContentfulStatusCode, {
+      message: res.statusText,
+    });
+  }
+
+  const text = await res.text();
+  const { files } = await parseUnicodeDirectory(text);
+
+  // filter out the files that isn't a valid semver
+  const versions = files.filter((file) => {
+    const match = file.name.match(/^(\d+)\.(\d+)\.(\d+)$/);
+    return match && match.length === 4;
+  });
+
+  return c.json(versions);
+});
+
 app.get(
   "/:path{.*}?",
   async (c) => {
@@ -72,26 +92,6 @@ app.get(
     });
   },
 );
-
-app.get("/.ucd-store.json", async (c) => {
-  const res = await fetch(`https://unicode.org/Public/?F=2`);
-  if (!res.ok) {
-    throw new HTTPException(res.status as ContentfulStatusCode, {
-      message: res.statusText,
-    });
-  }
-
-  const text = await res.text();
-  const { files } = await parseUnicodeDirectory(text);
-
-  // filter out the files that isn't a valid semver
-  const versions = files.filter((file) => {
-    const match = file.name.match(/^(\d+)\.(\d+)\.(\d+)$/);
-    return match && match.length === 4;
-  });
-
-  return c.json(versions);
-});
 
 app.onError(async (err, c) => {
   console.error(err);
