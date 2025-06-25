@@ -73,6 +73,26 @@ app.get(
   },
 );
 
+app.get("/.ucd-store.json", async (c) => {
+  const res = await fetch(`https://unicode.org/Public/?F=2`);
+  if (!res.ok) {
+    throw new HTTPException(res.status as ContentfulStatusCode, {
+      message: res.statusText,
+    });
+  }
+
+  const text = await res.text();
+  const { files } = await parseUnicodeDirectory(text);
+
+  // filter out the files that isn't a valid semver
+  const versions = files.filter((file) => {
+    const match = file.name.match(/^(\d+)\.(\d+)\.(\d+)$/);
+    return match && match.length === 4;
+  });
+
+  return c.json(versions);
+});
+
 app.onError(async (err, c) => {
   console.error(err);
   const url = new URL(c.req.url);
